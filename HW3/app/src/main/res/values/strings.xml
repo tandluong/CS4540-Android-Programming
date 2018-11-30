@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">news-app-2</string>
+    <string name="error_message">Failed to get results, please try again.</string>
+    <string name="description">news image</string>
+
+    <string name="main_notification_channel_name">Primary</string>
+    <string name="charging_reminder_notification_title">Ready for more News?</string>
+    <string name="charging_reminder_notification_body">Keep Reading!</string>
+</resources>
