@@ -280,10 +280,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void decideAction(String tag, String output){
-        if (mAddItem)
+        if (mAddItem) {
             add(output);
-        else if(mRemoveItem)
+            mProgress.setVisibility(View.INVISIBLE);
+            mProgress2.setVisibility(View.INVISIBLE);
+            mProgress3.setVisibility(View.INVISIBLE);
+            mSuccess.setVisibility(View.VISIBLE);
+        }
+        else if(mRemoveItem) {
+            mProgress.setVisibility(View.INVISIBLE);
+            mProgress2.setVisibility(View.INVISIBLE);
+            mProgress3.setVisibility(View.INVISIBLE);
+            mSuccess.setVisibility(View.VISIBLE);
             remove(output);
+        }
         else
             outputResult(tag, output);
 
