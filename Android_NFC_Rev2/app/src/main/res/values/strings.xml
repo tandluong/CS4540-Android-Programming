@@ -4,4 +4,5 @@
     <string name="history">History</string>
     <string name="fail_cross">1</string>
     <string name="success_check">1</string>
+    <string name="noNFC">You do not have NFC or NFC is not enabled.</string>
 </resources>

@@ -48,6 +48,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return mLogs.size();
     }
 
+    public void clearAll() { mLogs.clear(); }
+
     class HistoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView tag;
         TextView description;

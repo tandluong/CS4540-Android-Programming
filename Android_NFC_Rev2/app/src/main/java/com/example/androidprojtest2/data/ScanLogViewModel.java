@@ -29,4 +29,6 @@ public class ScanLogViewModel extends AndroidViewModel {
     public int getSize() {
         return mRepository.getSize();
     }
+
+    public void clearAll() { mRepository.clearAll();}
 }

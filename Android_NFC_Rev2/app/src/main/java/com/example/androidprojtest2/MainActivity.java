@@ -2,11 +2,13 @@ package com.example.androidprojtest2;
 
 import android.app.PendingIntent;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
+import android.nfc.NfcManager;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
 import android.nfc.tech.MifareClassic;
@@ -45,16 +47,19 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MyTestTag";
     private TextView mStatus;
+    private TextView mCheck;
     private ImageView mFail;
     private ImageView mSuccess;
     private ProgressBar mProgress;
     private ProgressBar mProgress2;
+    private ProgressBar mProgress3;
     private IdentificationViewModel mViewModel;
     private ScanLogViewModel mScanLogViewModel;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mMyRef;
     private boolean mAddItem = false;
     private boolean mRemoveItem = false;
+    private int counter = 0;
     private HashMap<String, String> mValues;
 
     private final String[][] techList = new String[][] {
@@ -78,10 +83,12 @@ public class MainActivity extends AppCompatActivity {
         mMyRef = mDatabase.getReference();
 
         mStatus = (TextView) findViewById(R.id.status);
+        mCheck = (TextView) findViewById(R.id.noNFC);
         mFail = (ImageView) findViewById(R.id.fail);
         mSuccess = (ImageView) findViewById(R.id.success);
         mProgress = (ProgressBar) findViewById(R.id.progress);
         mProgress2 = (ProgressBar) findViewById(R.id.progress2);
+        mProgress3 = (ProgressBar) findViewById(R.id.progress3);
 
         mViewModel = ViewModelProviders.of(this).get(IdentificationViewModel.class);
         mScanLogViewModel = ViewModelProviders.of(this).get(ScanLogViewModel.class);
@@ -115,14 +122,43 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    protected void checkNFC() {
+        NfcManager manager = (NfcManager) getSystemService(Context.NFC_SERVICE);
+        NfcAdapter adapter = manager.getDefaultAdapter();
+        if(adapter != null) {
+            if(adapter.isEnabled()) {
+                counter++;
+                if(counter == 1) {
+                    mProgress.setVisibility(View.VISIBLE);
+                    mProgress2.setVisibility(View.VISIBLE);
+                    mProgress3.setVisibility(View.VISIBLE);
+                    mStatus.setVisibility(View.VISIBLE);
+                }
+            }
+            else {
+                mProgress.setVisibility(View.INVISIBLE);
+                mProgress2.setVisibility(View.INVISIBLE);
+                mProgress3.setVisibility(View.INVISIBLE);
+                mStatus.setVisibility(View.INVISIBLE);
+                mCheck.setVisibility(View.VISIBLE);
+            }
+        }
+        else {
+            mProgress.setVisibility(View.INVISIBLE);
+            mProgress2.setVisibility(View.INVISIBLE);
+            mProgress3.setVisibility(View.INVISIBLE);
+            mStatus.setVisibility(View.INVISIBLE);
+            mCheck.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-//        Intent intent = getIntent();
-//        Log.d("myIntent", ""+intent);
+        mCheck.setVisibility(View.INVISIBLE);
+        checkNFC();
         // creating pending intent:
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-//        Log.d("pendingIntent", ""+pendingIntent);
         // creating intent receiver for NFC events:
         IntentFilter filter = new IntentFilter();
         filter.addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
@@ -130,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
         filter.addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
         // enabling foreground dispatch for getting intent from NFC event:
         NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-//        Log.d("nfcAdapter", nfcAdapter+"");
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, new IntentFilter[]{filter}, this.techList);
     }
 
@@ -317,6 +352,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Card in database. Scan activity logged to history.", Toast.LENGTH_LONG).show();
             mProgress.setVisibility(View.INVISIBLE);
             mProgress2.setVisibility(View.INVISIBLE);
+            mProgress3.setVisibility(View.INVISIBLE);
             mSuccess.setVisibility(View.VISIBLE);
             mStatus.setText("Success!");
         }
@@ -324,6 +360,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Card not in database. Scan activity logged to history.", Toast.LENGTH_LONG).show();
             mProgress.setVisibility(View.INVISIBLE);
             mProgress2.setVisibility(View.INVISIBLE);
+            mProgress3.setVisibility(View.INVISIBLE);
             mFail.setVisibility(View.VISIBLE);
             mStatus.setText("Failed...");
         }
@@ -361,6 +398,7 @@ public class MainActivity extends AppCompatActivity {
             mSuccess.setVisibility(View.GONE);
             mProgress.setVisibility(View.VISIBLE);
             mProgress2.setVisibility(View.VISIBLE);
+            mProgress3.setVisibility(View.VISIBLE);
             mStatus.setText("Awaiting Scan...");
         }
     }

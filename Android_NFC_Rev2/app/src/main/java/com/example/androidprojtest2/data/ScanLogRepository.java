@@ -38,4 +38,17 @@ public class ScanLogRepository {
     int getSize() {
         return mScanLogDao.getSize();
     }
+
+    public void clearAll() { new clearAsyncTask(mScanLogDao).execute(); }
+
+    private static class clearAsyncTask extends AsyncTask<Void, Void, Void> {
+        private ScanLogDao mAsyncTaskDao;
+        clearAsyncTask(ScanLogDao dao) { mAsyncTaskDao = dao; }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mAsyncTaskDao.clearAll();
+            return null;
+        }
+    }
 }

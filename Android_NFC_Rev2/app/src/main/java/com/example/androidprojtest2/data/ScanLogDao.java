@@ -13,9 +13,12 @@ public interface ScanLogDao {
     @Insert
     void insert (ScanLog scanLog);
 
-    @Query("SELECT * FROM log_table ORDER BY date_logged ASC")
+    @Query("SELECT * FROM log_table ORDER BY date_logged DESC")
     LiveData<List<ScanLog>> getAllLogs();
 
     @Query("SELECT COUNT(description) from log_table")
     int getSize();
+
+    @Query("DELETE FROM log_table")
+    void clearAll();
 }

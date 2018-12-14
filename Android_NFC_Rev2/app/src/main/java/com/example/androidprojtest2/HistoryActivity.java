@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.androidprojtest2.data.ScanLog;
 import com.example.androidprojtest2.data.ScanLogViewModel;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HistoryActivity extends AppCompatActivity {
+    private Button resetButton;
     private RecyclerView mRecyclerView;
     private HistoryAdapter mAdapter;
     private ScanLogViewModel mViewModel;
@@ -28,12 +31,21 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
+        resetButton = findViewById(R.id.history_button);
         mViewModel = ViewModelProviders.of(this).get(ScanLogViewModel.class);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.history_view);
         mAdapter = new HistoryAdapter(this, logs);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.clearAll();
+                clearData();
+            }
+        });
 
         mViewModel.getAllLogs().observe(this, new Observer<List<ScanLog>>() {
             @Override
@@ -65,6 +77,11 @@ public class HistoryActivity extends AppCompatActivity {
 
     public void populateRecyclerView(List<ScanLog> logs) {
         mAdapter.mLogs.addAll(logs);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public void clearData() {
+        mAdapter.clearAll();
         mAdapter.notifyDataSetChanged();
     }
 }
