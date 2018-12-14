@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 mProgress3.setVisibility(View.INVISIBLE);
                 mStatus.setVisibility(View.INVISIBLE);
                 mCheck.setVisibility(View.VISIBLE);
+                counter = 0;
             }
         }
         else {
@@ -149,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
             mProgress3.setVisibility(View.INVISIBLE);
             mStatus.setVisibility(View.INVISIBLE);
             mCheck.setVisibility(View.VISIBLE);
+            counter = 0;
         }
     }
 
