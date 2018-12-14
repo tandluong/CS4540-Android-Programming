@@ -308,6 +308,7 @@ public class MainActivity extends AppCompatActivity {
         {
             Toast.makeText(MainActivity.this, "Card is already in database, cancelling add.", Toast.LENGTH_LONG).show();
             mFail.setVisibility(View.VISIBLE);
+            mSuccess.setVisibility(View.INVISIBLE);
             mStatus.setText("Duplicate card found");
         }
 
@@ -329,6 +330,7 @@ public class MainActivity extends AppCompatActivity {
         {
             Toast.makeText(MainActivity.this, "Card is not in database, cancelling remove.", Toast.LENGTH_LONG).show();
             mFail.setVisibility(View.VISIBLE);
+            mSuccess.setVisibility(View.INVISIBLE);
             mStatus.setText("Card not found");
         }
         else{
