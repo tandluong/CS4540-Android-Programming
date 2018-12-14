@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MyTestTag";
     private TextView mStatus;
     private TextView mCheck;
+    private TextView mVerbose;
     private ImageView mFail;
     private ImageView mSuccess;
     private ProgressBar mProgress;
@@ -85,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
         mStatus = (TextView) findViewById(R.id.status);
         mCheck = (TextView) findViewById(R.id.noNFC);
         mFail = (ImageView) findViewById(R.id.fail);
+        mVerbose = (TextView) findViewById(R.id.verbose);
+        mVerbose.setVisibility(View.GONE);
         mSuccess = (ImageView) findViewById(R.id.success);
         mProgress = (ProgressBar) findViewById(R.id.progress);
         mProgress2 = (ProgressBar) findViewById(R.id.progress2);
@@ -271,23 +274,27 @@ public class MainActivity extends AppCompatActivity {
         else if (itemThatWasClickedId == R.id.addButton){
             mAddItem = !mAddItem;
             mRemoveItem = false;
-            Toast.makeText(MainActivity.this, "The next card scanned will be added to the database.", Toast.LENGTH_LONG).show();
+//            Toast.makeText(MainActivity.this, "The next card scanned will be added to the database.", Toast.LENGTH_LONG).show();
+            mVerbose.setText("The next card scanned will be added to the database.");
+            mVerbose.setVisibility(View.VISIBLE);
         }
         else if (itemThatWasClickedId == R.id.removeButton){
             mAddItem = false;
             mRemoveItem = !mRemoveItem;
-            Toast.makeText(MainActivity.this, "The next card scanned will be removed from the database.", Toast.LENGTH_LONG).show();
+//            Toast.makeText(MainActivity.this, "The next card scanned will be removed from the database.", Toast.LENGTH_LONG).show();
+            mVerbose.setText("The next card scanned will be removed from the database.");
+            mVerbose.setVisibility(View.VISIBLE);
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void decideAction(String tag, String output){
         if (mAddItem) {
-            add(output);
             mProgress.setVisibility(View.INVISIBLE);
             mProgress2.setVisibility(View.INVISIBLE);
             mProgress3.setVisibility(View.INVISIBLE);
             mSuccess.setVisibility(View.VISIBLE);
+            add(output);
         }
         else if(mRemoveItem) {
             mProgress.setVisibility(View.INVISIBLE);
@@ -306,18 +313,22 @@ public class MainActivity extends AppCompatActivity {
     protected void add(String output){
         if (mValues.containsValue(output))
         {
-            Toast.makeText(MainActivity.this, "Card is already in database, cancelling add.", Toast.LENGTH_LONG).show();
+//            Toast.makeText(MainActivity.this, "Card is already in database, cancelling add.", Toast.LENGTH_LONG).show();
             mFail.setVisibility(View.VISIBLE);
             mSuccess.setVisibility(View.INVISIBLE);
             mStatus.setText("Duplicate card found");
+            mVerbose.setText("Card is already in database, cancelling add.");
+            mVerbose.setVisibility(View.VISIBLE);
         }
 
         else {
 //            Toast.makeText(MainActivity.this, "Card is not in database, " +output+ " will be added." , Toast.LENGTH_LONG).show();
-            Toast.makeText(MainActivity.this, "Card is not in database and will be added." , Toast.LENGTH_LONG).show();
+//            Toast.makeText(MainActivity.this, "Card is not in database and will be added." , Toast.LENGTH_LONG).show();
             mSuccess.setVisibility(View.VISIBLE);
             mFail.setVisibility(View.INVISIBLE);
             mStatus.setText("Added!");
+            mVerbose.setText("Card is not in database and will be added.");
+            mVerbose.setVisibility(View.VISIBLE);
             DatabaseReference tempRef = mMyRef.child("Tag"+(mValues.size()+1));
             tempRef.setValue(output);
         }
@@ -329,17 +340,22 @@ public class MainActivity extends AppCompatActivity {
     protected void remove(String output){
         if (!mValues.containsValue(output))
         {
-            Toast.makeText(MainActivity.this, "Card is not in database, cancelling remove.", Toast.LENGTH_LONG).show();
+//            Toast.makeText(MainActivity.this, "Card is not in database, cancelling remove.", Toast.LENGTH_LONG).show();
             mFail.setVisibility(View.VISIBLE);
             mSuccess.setVisibility(View.INVISIBLE);
             mStatus.setText("Card not found");
+            mVerbose.setText("Card is not in database, cancelling remove.");
+            mVerbose.setVisibility(View.VISIBLE);
         }
         else{
 //            Toast.makeText(MainActivity.this, "Card is in the database, " +output+ " will be removed.", Toast.LENGTH_LONG).show();
-            Toast.makeText(MainActivity.this, "Card is in the database and will be removed.", Toast.LENGTH_LONG).show();
+//            Toast.makeText(MainActivity.this, "Card is in the database and will be removed.", Toast.LENGTH_LONG).show();
             mSuccess.setVisibility(View.VISIBLE);
             mFail.setVisibility(View.INVISIBLE);
             mStatus.setText("Removed!");
+            mVerbose.setText("Card is in the database and will be removed.");
+            mVerbose.setVisibility(View.VISIBLE);
+
             String tagName = null;
             for(String s : mValues.keySet()){
                 if(mValues.get(s).equals(output)){
@@ -365,20 +381,30 @@ public class MainActivity extends AppCompatActivity {
         GetIdentification getIdentification = new GetIdentification();
         getIdentification.execute(fullOutPut);
         if (mValues.containsValue(output)) {
-            Toast.makeText(MainActivity.this, "Card in database. Scan activity logged to history.", Toast.LENGTH_LONG).show();
+//            Toast.makeText(MainActivity.this, "Card in database. Scan activity logged to history.", Toast.LENGTH_LONG).show();
             mProgress.setVisibility(View.INVISIBLE);
             mProgress2.setVisibility(View.INVISIBLE);
             mProgress3.setVisibility(View.INVISIBLE);
             mSuccess.setVisibility(View.VISIBLE);
             mStatus.setText("Success!");
+            mVerbose.setText("You scanned:\n"
+                    + "Output: " + output + "\n"
+                    + "at " + new Date() + "\n"
+                    + "This card is in the database.");
+            mVerbose.setVisibility(View.VISIBLE);
         }
         else {
-            Toast.makeText(MainActivity.this, "Card not in database. Scan activity logged to history.", Toast.LENGTH_LONG).show();
+//            Toast.makeText(MainActivity.this, "Card not in database. Scan activity logged to history.", Toast.LENGTH_LONG).show();
             mProgress.setVisibility(View.INVISIBLE);
             mProgress2.setVisibility(View.INVISIBLE);
             mProgress3.setVisibility(View.INVISIBLE);
             mFail.setVisibility(View.VISIBLE);
             mStatus.setText("Failed...");
+            mVerbose.setText("You scanned:\n"
+                    + "Output: " + output + "\n"
+                    + "at " + new Date() + "\n"
+                    + "This card is not in the database.");
+            mVerbose.setVisibility(View.VISIBLE);
         }
         //makes message linger for 3 seconds
         Sleeper sleeper = new Sleeper();
@@ -416,6 +442,7 @@ public class MainActivity extends AppCompatActivity {
             mProgress2.setVisibility(View.VISIBLE);
             mProgress3.setVisibility(View.VISIBLE);
             mStatus.setText("Awaiting Scan...");
+            mVerbose.setVisibility(View.GONE);
         }
     }
 }
