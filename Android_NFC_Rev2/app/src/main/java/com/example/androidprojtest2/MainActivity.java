@@ -316,6 +316,7 @@ public class MainActivity extends AppCompatActivity {
 //            Toast.makeText(MainActivity.this, "Card is not in database, " +output+ " will be added." , Toast.LENGTH_LONG).show();
             Toast.makeText(MainActivity.this, "Card is not in database and will be added." , Toast.LENGTH_LONG).show();
             mSuccess.setVisibility(View.VISIBLE);
+            mFail.setVisibility(View.INVISIBLE);
             mStatus.setText("Added!");
             DatabaseReference tempRef = mMyRef.child("Tag"+(mValues.size()+1));
             tempRef.setValue(output);
@@ -337,6 +338,7 @@ public class MainActivity extends AppCompatActivity {
 //            Toast.makeText(MainActivity.this, "Card is in the database, " +output+ " will be removed.", Toast.LENGTH_LONG).show();
             Toast.makeText(MainActivity.this, "Card is in the database and will be removed.", Toast.LENGTH_LONG).show();
             mSuccess.setVisibility(View.VISIBLE);
+            mFail.setVisibility(View.INVISIBLE);
             mStatus.setText("Removed!");
             String tagName = null;
             for(String s : mValues.keySet()){

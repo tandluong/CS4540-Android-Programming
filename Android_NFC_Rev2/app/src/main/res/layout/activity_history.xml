@@ -8,8 +8,8 @@
 
     <Button
         android:id="@+id/history_button"
-        android:layout_width="141dp"
-        android:layout_height="67dp"
+        android:layout_width="69dp"
+        android:layout_height="82dp"
         android:background="@color/colorAccent"
         android:text="Erase History"
         android:textColor="@android:color/black"
